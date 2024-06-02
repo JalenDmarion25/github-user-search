@@ -98,13 +98,20 @@ section.search-bar img{
   left: 20px;
 }
 
-section.search-bar span{
+section.search-bar span {
   position: absolute;
-    color: var(--no-result);
-    width: 100px;
-    right: 140px;
-    top: 16px;
-    visibility: hidden;
+  color: var(--no-result);
+  width: 100px;
+  right: 140px;
+  top: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+}
+
+section.search-bar span.show {
+  opacity: 1;
+  visibility: visible;
 }
 
 section.search-bar button{
@@ -314,10 +321,20 @@ section.info-container div.row-three-desktop {
 }
 
 
+@media (max-width: 700px) {
+  section.search-bar span {
+    display: none;
+  }
+}
+
 @media (max-width: 640px) {
 
   section.info-container {
     padding: 20px 0 25px 0;
+}
+
+section.search-bar input::placeholder{
+  display: none;
 }
 
   section.info-container div.row-three-desktop {

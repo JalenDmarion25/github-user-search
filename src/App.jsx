@@ -31,6 +31,7 @@ function App() {
   const [userName, setUserName] = useState("");
   const [userInfo, setUserInfo] = useState(placeholderData);
   const [error, setError] = useState(null); 
+  const [showNoResults, setShowNoResults] = useState(false);
   const preference = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [isDark, setIsDark] = useLocalStorage("isDark", preference);
 
@@ -52,15 +53,25 @@ function App() {
   }
 
   const infoFetch = async (name) => {
-    // console.log(name)
-    
     try {
-      const response = await fetch('https://api.github.com/users/' + name +'');
+      const response = await fetch('https://api.github.com/users/' + name);
+
+      if (response.status === 404) {
+        console.error("User not found (404)");
+        setError("User not found");
+        setShowNoResults(true);
+        setTimeout(() => {
+          setShowNoResults(false);
+        }, 4000);
+        setUserInfo(placeholderData); // Reset to placeholder data on error
+        return;
+      }
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
       const result = await response.json();
-      // console.log(result);
       setUserInfo(result);
     } catch (error) {
       setError(error.toString());
@@ -100,7 +111,7 @@ function App() {
         <button onClick={handleButtonClick} className="search-btn">
           Search
         </button>
-        <span className="no-result-text">No results</span>
+        <span className={`no-result-text ${showNoResults ? 'show' : ''}`}>No results</span>
       </section>
 
       <section className="info-container">
